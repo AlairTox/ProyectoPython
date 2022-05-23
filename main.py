@@ -1,1 +1,2 @@
-#AAAAAAAAAAAAAAAAA
+while True:
+    print("AAAAAAAAAAAAA")
