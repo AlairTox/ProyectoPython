@@ -1,5 +1,56 @@
 import json
 
+def busqueda(raton, alternativas, estadoLaberinto, salida):
+    for opcion in alternativas:
+        nuevoEstado = estadoLaberinto[:]
+        nuevoEstado[raton[0]][raton[1]] = ' '
+            
+        if nuevoEstado[raton[0]-1][raton[1]] != '#':#Movimiento Arriba
+            nuevoEstado[raton[0]-1][raton[1]] = 'R'
+            raton = nuevoEstado[raton[0]-1][raton[1]]
+            busqueda(raton, alternativas, estadoLaberinto, salida)
+            
+        if nuevoEstado[raton[0]][raton[1]+1] != '#':#Movimiento Derecha
+            nuevoEstado[raton[0]][raton[1]+1] = 'R'
+            raton = nuevoEstado[raton[0]][raton[1]+1] 
+            busqueda(raton, alternativas, estadoLaberinto, salida)
+                    
+        if nuevoEstado[raton[0]][raton[1]-1] != '#':#Movimiento Izquierda
+            nuevoEstado[raton[0]][raton[1]-1] = 'R'
+            raton = nuevoEstado[raton[0]][raton[1]-1]
+            busqueda(raton, alternativas, estadoLaberinto, salida)
+                    
+        if nuevoEstado[raton[0]+1][raton[1]] != '#':#Movimiento Abajo
+            nuevoEstado[raton[0]+1][raton[1]] = 'R'
+            raton = nuevoEstado[raton[0]+1][raton[1]]        
+            busqueda(raton, alternativas, estadoLaberinto, salida)
+        
+        for datos in nuevoEstado:
+            print(nuevoEstado)
+        
+        if raton == salida:
+            return True
+
+#backtrack visto en clase para referencia
+# def busca(objetivo, alternativas, estado):#Objetivo es que R y S esten en la misma posición#Alternativas son los movimientos posibles y estado es el laberinto
+#     for opcion in alternativas:
+#         nuevoEstado = estado[:] #crea nuevo estado
+
+#         nuevoEstado.append(opcion) #pega alternativa que sí funca
+#         if sum(nuevoEstado) == objetivo: #Si encuentro lo que busco, terminé
+#             return nuevoEstado
+#         if sum(nuevoEstado) > objetivo: #si ya te pasaste, se regresa al inicio buscando otra alternativa
+#             print("Me regreso")
+#             continue
+#              #al hacer backtrack, se libera memoria
+#         #recursividad:Aun no llega, aun no se pasa, llama a la funcion de nuevo para buscar la solucion 
+#          #suponiendo que el estado actual incluye la alternativa
+#         print(nuevoEstado)
+#         resultado = busca(objetivo, alternativas, nuevoEstado) 
+#         if resultado != False:
+#             return resultado
+#         return False #si analizaste todas las posibilidades y ninguna funca, termina
+
 def cargarArchivo(rutaArchivo, listaLaberinto):
     with open(rutaArchivo) as archivo:
         contenido = json.load(archivo)
@@ -9,13 +60,13 @@ def cargarArchivo(rutaArchivo, listaLaberinto):
 
 # def ideaAvido(objetivo, raton, movimientos):
 #     while(raton != objetivo):
-#         if movimientoArriba != 'X':
+#         if movimientoArriba != '#':
 #             raton = ratonArriba
-#         elif movimientoIzquierda != 'X':
+#         elif movimientoIzquierda != '#':
 #             raton = ratonIzq
-#         elif movimientoAbajo != 'X':
+#         elif movimientoAbajo != '#':
 #             raton = ratonAbajo
-#         elif movimientoDerecha != 'X':
+#         elif movimientoDerecha != '#':
 #             raton = ratonDerecha
 listaLaberinto = []
 rutaArchivo = 'laberinto.json'
@@ -24,26 +75,6 @@ cargarArchivo(rutaArchivo, listaLaberinto)
 for datos in listaLaberinto:
     print(datos)
 
-print(listaLaberinto[2][2])
-
-# backtrack visto en clase para referencia
-# def busca(objetivo, alternativas, estado):
-#     for opcion in alternativas:
-#         nuevoEstado = estado[:] #crea nuevo estado
-#         nuevoEstado.append(opcion) #pega alternativa que sí funca
-#         if sum(nuevoEstado) == objetivo: #Si encuentro lo que busco, terminé
-#             return nuevoEstado
-#         if sum(nuevoEstado) > objetivo: #si ya te pasaste, se regresa al inicio buscando otra alternativa
-#             print("Me regreso")
-#             continue
-#              al hacer backtrack, se libera memoria
-#         recursividad:Aun no llega, aun no se pasa, llama a la funcion de nuevo para buscar la solucion 
-#          suponiendo que el estado actual incluye la alternativa
-#         print(nuevoEstado)
-#         resultado = busca(objetivo, alternativas, nuevoEstado) 
-#         if resultado != False:
-#             return resultado
-#         return False si analizaste todas las posibilidades y ninguna funca, termina
 
 
 # funciones necesarios para poder hacer el proyecto:
