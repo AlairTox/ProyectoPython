@@ -1,4 +1,4 @@
-from importlib.metadata import FileHash
+
 import json
 
 def cargarArchivo(rutaArchivo):
