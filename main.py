@@ -1,55 +1,92 @@
 import json
 
-def busqueda(raton, alternativas, estadoLaberinto, salida):
-    for opcion in alternativas:
-        nuevoEstado = estadoLaberinto[:]
-        nuevoEstado[raton[0]][raton[1]] = ' '
-            
-        if nuevoEstado[raton[0]-1][raton[1]] != '#':#Movimiento Arriba
-            nuevoEstado[raton[0]-1][raton[1]] = 'R'
-            raton = nuevoEstado[raton[0]-1][raton[1]]
-            busqueda(raton, alternativas, estadoLaberinto, salida)
-            
-        if nuevoEstado[raton[0]][raton[1]+1] != '#':#Movimiento Derecha
-            nuevoEstado[raton[0]][raton[1]+1] = 'R'
-            raton = nuevoEstado[raton[0]][raton[1]+1] 
-            busqueda(raton, alternativas, estadoLaberinto, salida)
-                    
-        if nuevoEstado[raton[0]][raton[1]-1] != '#':#Movimiento Izquierda
-            nuevoEstado[raton[0]][raton[1]-1] = 'R'
-            raton = nuevoEstado[raton[0]][raton[1]-1]
-            busqueda(raton, alternativas, estadoLaberinto, salida)
-                    
-        if nuevoEstado[raton[0]+1][raton[1]] != '#':#Movimiento Abajo
-            nuevoEstado[raton[0]+1][raton[1]] = 'R'
-            raton = nuevoEstado[raton[0]+1][raton[1]]        
-            busqueda(raton, alternativas, estadoLaberinto, salida)
-        
-        for datos in nuevoEstado:
-            print(nuevoEstado)
-        
-        if raton == salida:
-            return True
+# Funcion que verifica si una casilla que no está bloqueada sigue siendo funcional.
+def verificarFuncional (ratonFila, ratonColumna, noFuncionales):
+    for item in range(len(noFuncionales)):
+        if ratonFila == noFuncionales[item][0]:
+            if ratonColumna == noFuncionales[item][1]:
+                return False
+    return True
 
-#backtrack visto en clase para referencia
-# def busca(objetivo, alternativas, estado):#Objetivo es que R y S esten en la misma posición#Alternativas son los movimientos posibles y estado es el laberinto
-#     for opcion in alternativas:
-#         nuevoEstado = estado[:] #crea nuevo estado
+def encontrarUbicacion(estado, objeto):
+    columna = 0
+    fila = 0
+    coordenadas = []
+    for item in range(len(estado)):#aqui seria avanzar de fila en fila
+        for x in estado[item]:#aqui seria recorrer la fila caracter por caracter
+            if x == objeto:
+                coordenadas.append(fila)
+                coordenadas.append(columna)
+                return coordenadas
+            columna+=1
+        fila+=1
+        columna = 0
+        
+# Función que checa las 4 casillas adyacentes para ver a donde moverse
+def movimiento(raton, nuevoEstado, salida, noFuncionales):
 
-#         nuevoEstado.append(opcion) #pega alternativa que sí funca
-#         if sum(nuevoEstado) == objetivo: #Si encuentro lo que busco, terminé
-#             return nuevoEstado
-#         if sum(nuevoEstado) > objetivo: #si ya te pasaste, se regresa al inicio buscando otra alternativa
-#             print("Me regreso")
-#             continue
-#              #al hacer backtrack, se libera memoria
-#         #recursividad:Aun no llega, aun no se pasa, llama a la funcion de nuevo para buscar la solucion 
-#          #suponiendo que el estado actual incluye la alternativa
-#         print(nuevoEstado)
-#         resultado = busca(objetivo, alternativas, nuevoEstado) 
-#         if resultado != False:
-#             return resultado
-#         return False #si analizaste todas las posibilidades y ninguna funca, termina
+    nuevoEstado[raton[0]][raton[1]] = ' '
+    posicionAnterior = raton[:]
+    contador = 0
+                    
+    if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales) and ((raton[0]-1) != posicionAnterior[0] and raton[1] != posicionAnterior[1]):#Movimiento Arriba
+        nuevoEstado[raton[0]-1][raton[1]] = 'R'
+        raton[0] = raton[0]-1
+        print(contador)
+        return contador
+    else:
+        contador+=1
+            
+    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales) and (raton[0] != posicionAnterior[0] and raton[1]+1 != posicionAnterior[1]):#Movimiento Derecha
+        nuevoEstado[raton[0]][raton[1]+1] = 'R'
+        raton[1] = raton[1]+1
+        print(contador)        
+        return contador
+    else:
+        contador+=1
+
+    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales) and (raton[0] != posicionAnterior[0] and raton[1]-1 != posicionAnterior[1]):#Movimiento Izquierda
+        nuevoEstado[raton[0]][raton[1]-1] = 'R'
+        raton[1] = raton[1]-1
+        print(contador)        
+        return contador
+    else:
+        contador+=1
+                    
+    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales) and (raton[0]+1 != posicionAnterior[0] and raton[1] != posicionAnterior[1]):#Movimiento Abajo
+        nuevoEstado[raton[0]+1][raton[1]] = 'R'
+        raton[0] = raton[0]+1
+        print(contador)        
+        return contador
+    else:
+        contador+=1
+
+    if raton == salida:
+        return 5
+    else:
+        print(contador)        
+        return contador
+
+def backtrack(estado, salida, noFuncionales, raton):
+    #Objetivo es que R y S esten en la misma posición #esto ya queda con la linea 70, procedo a eliminarlo
+    # estado es el laberinto
+    nuevoEstado = estado[:] #crea nuevo estado
+    # importante: ver si backtrack recibe o inicializa raton
+    if movimiento(raton, nuevoEstado, salida, noFuncionales) <= 2: 
+        #si la busqueda da 2 o menos, se continua la busqueda
+        backtrack(nuevoEstado, salida, noFuncionales, raton)
+        print("Impresion final backtrack")
+    if movimiento(raton, nuevoEstado, salida, noFuncionales) >= 3: 
+        print("Impresion movimiento >=3")
+        #si la busqueda da 3, se anexa la posicion a no funcionales
+        noFuncionales.append([raton[0], raton[1]]) 
+    print("Impresion de nuevo Estado")
+    for datos in nuevoEstado:
+        print(nuevoEstado, "\n") #aqui sería imprimir el laberinto con la nueva posicion. no se si funcione, yo lo pegué <3
+    if movimiento(raton, nuevoEstado, salida, noFuncionales) == 5: # Ya se encontró la salida
+        return True
+    return False #si analizaste todas las posibilidades y ninguna funciona, termina
+
 
 def cargarArchivo(rutaArchivo, listaLaberinto):
     with open(rutaArchivo) as archivo:
@@ -58,16 +95,6 @@ def cargarArchivo(rutaArchivo, listaLaberinto):
             listaLaberinto.append(datos.get("fila"))
     return
 
-# def ideaAvido(objetivo, raton, movimientos):
-#     while(raton != objetivo):
-#         if movimientoArriba != '#':
-#             raton = ratonArriba
-#         elif movimientoIzquierda != '#':
-#             raton = ratonIzq
-#         elif movimientoAbajo != '#':
-#             raton = ratonAbajo
-#         elif movimientoDerecha != '#':
-#             raton = ratonDerecha
 listaLaberinto = []
 rutaArchivo = 'laberinto.json'
 
@@ -75,15 +102,5 @@ cargarArchivo(rutaArchivo, listaLaberinto)
 for datos in listaLaberinto:
     print(datos)
 
-
-
-# funciones necesarios para poder hacer el proyecto:
-# verificar arriba, derecha, abajo, izquierda. 
-# si desbloqueado, se pasa a esa casilla
-# si bloqueado/inexistente, continua checando
-# si llega al final del chequeo y no pudo avanzar, se marca esta casilla como bloqueada. Se bloquea? 
-# y se regresa a la casilla anterior. y asi
-# ^ esto seria solo una funcion, si se rifa
-# hacerla recursiva OTL 
-# para eso seria que cuando avance se vuelva a llamar a la funcion
-# problema seria como hacer el sistema de laberinto para avanzar y demas
+noFuncionales =[]
+backtrack(listaLaberinto,[5,10], noFuncionales, [3,1])
