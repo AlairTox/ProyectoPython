@@ -30,125 +30,83 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas):
     derecha = 0
     izquierda = 0
     abajo = 0
-    
+    print("\n")              
+    for datos in nuevoEstado:
+        print(datos)       
+        
     if raton == salida: # Ya se encontró la salida
         return 5
   
     if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales):#Movimiento Arriba
-        # no hay pared ni bloqueado arriba
-        print("no hay pared arriba")
         arriba = 1
     else:
         contador+=1
 
     if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales):#Movimiento Derecha
-        # no hay pared ni bloqueado derecha
-        print("no hay pared derecha")
         derecha = 1
     else:
         contador+=1
 
     if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales):#Movimiento Izquierda
-         print("no hay pared izquierda")
          izquierda = 1
     else:
         contador+=1
 
     if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales):#Movimiento Abajo
-        print("no hay pared abajo")
         abajo = 1
     else:
         contador+=1
+
     if contador == 3:
         noFuncionales.append([raton[0], raton[1]])
     # HASTA AQUÍ VERIFICADO DE PAREDES, CONTINUA EL MOVIMIENTO
 
     if arriba == 1:
         if raton[0]-1 != posicionesVisitadas[-2][0]:
-            print("me muevo arr")
             nuevoEstado[raton[0]-1][raton[1]] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]-1
-            print("\n")              
-            for datos in nuevoEstado:
-                print(datos)   
-            print(contador) 
             return contador
 
     if derecha == 1:
         if raton[1]+1 != posicionesVisitadas[-2][1]: 
-            print("me muevo der")
             nuevoEstado[raton[0]][raton[1]+1] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
-            raton[1] = raton[1]+1
-            print("\n")              
-            for datos in nuevoEstado:
-                print(datos)   
-            print(contador)
+            raton[1] = raton[1]+1            
             return contador
 
     if izquierda == 1:
         if raton[1]-1 != posicionesVisitadas[-2][1]:
-            print("me muevo izq")
             nuevoEstado[raton[0]][raton[1]-1] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
-            raton[1] = raton[1]-1 
-            print("\n")              
-            for datos in nuevoEstado:
-                print(datos)    
-            print(contador)
+            raton[1] = raton[1]-1            
             return contador
 
     if abajo == 1:
         if raton[0]+1 != posicionesVisitadas[-2][0]:
-            print("me muevo ab")
             nuevoEstado[raton[0]+1][raton[1]] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
-            raton[0] = raton[0]+1 
-            print("\n")              
-            for datos in nuevoEstado:
-                print(datos)  
-            print(contador)
+            raton[0] = raton[0]+1            
             return contador
-
-    else:
-        print("No pude moverme :(")
-        print(contador)
-        return contador
+    print("No pude moverme :(")
+    print(contador)
+    return contador
 
 def backtrack(estado, salida, noFuncionales, raton, posicionesVisitadas):
     # estado es el laberinto
     nuevoEstado = estado[:] #crea nuevo estado
             
-    print("Inicio Backtrack:")
     contador = movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas)
-    print(contador)
 
     if contador == 5: # Ya se encontró la salida
-        print("Ya se logro :]")
+        print("Salida encontrada correctamente")
         return True
 
-    if contador == 3: 
-        print("Impresion movimiento == 3")
-        #si la busqueda da 3, se anexa la posicion a no funcionales
-        print("Estamos dentro del 3, imprimo las nofuncionales:")
-        print(noFuncionales)
-        print("y las visitadas:")
-        print(posicionesVisitadas)
-        print("Agrego a noFuncionales")
-        backtrack(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas)
-        
-    elif contador <= 2: 
-        print("Impresion movimiento <=2")
-        #si la busqueda da 2 o menos, se continua la busqueda
-        print("Estamos dentro del 2, imprimo las nofuncionales:")
-        print(noFuncionales)
-        print("y las visitadas:")
-        print(posicionesVisitadas)
+    if contador <= 3: 
         backtrack(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas)
 
     else: 
-        print("No hay salida")    
+        print("No hay salida posible")    
         return False #si analizaste todas las posibilidades y ninguna funciona, termina
 
 def cargarArchivo(rutaArchivo, listaLaberinto):
@@ -158,11 +116,25 @@ def cargarArchivo(rutaArchivo, listaLaberinto):
             listaLaberinto.append(datos.get("fila"))
     return
 
+def eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente):
+    for items in listaLaberintoEficiente:
+        print(items)
+    print(salidaEficiente)
+    print(noFuncionalesEficiente)
+    print(ratonEficiente)
+    print(posicionesVisitadasEficiente)
+    return
+
+def vidas(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas):
+    
+    return
+
+########## MAIN #############################
 listaLaberinto = []
 rutaArchivo = 'laberinto.json'
 
 cargarArchivo(rutaArchivo, listaLaberinto)
-
+print("Impresión inicial del laberinto")
 for datos in listaLaberinto:
     print(datos)
 
@@ -172,4 +144,31 @@ salida = encontrarUbicacion(listaLaberinto, 'S')
 posicionesVisitadas = []
 posicionesVisitadas.append(raton)
 
-backtrack(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas)
+listaLaberintoEficiente = []
+cargarArchivo(rutaArchivo, listaLaberintoEficiente)
+salidaEficiente = salida[:]
+noFuncionalesEficiente = noFuncionales[:]
+ratonEficiente = raton[:]
+posicionesVisitadasEficiente = posicionesVisitadas[:]
+
+listaLaberintoVidas = []
+cargarArchivo(rutaArchivo, listaLaberintoVidas)
+salidaVidas = salida[:]
+ratonVidas = raton[:]
+noFuncionalesVidas = noFuncionales[:]
+posicionesVisitadasVidas = posicionesVisitadas[:]
+
+opcion = 0
+while opcion != 4:
+    print("Menu Inicial")
+    opcion = int(input("Ingresa \n[1]: Busqueda de salida\n[2]: Busqueda de salida eficiente\n[3]: Laberinto con vidas\n[4]: Salir del Programa\n"))
+    if opcion == 1:
+        backtrack(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas)
+        print(salida)
+        print(noFuncionales)
+        print(raton)
+        print(posicionesVisitadas)
+    if opcion == 2:
+        eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente)
+    if opcion == 3:
+        vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas)
