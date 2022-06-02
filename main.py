@@ -28,33 +28,37 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionAnterior):
     nuevoEstado[raton[0]][raton[1]] = ' '
     contador = 0
                     
-    if nuevoEstado[raton[0]-1][raton[1]] != "#" and verificarFuncional(raton[0]-1, raton[1], noFuncionales) and ((raton[0]-1) != posicionAnterior[0]):#Movimiento Arriba
+    if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales) and ((raton[0]-1) != posicionAnterior[0]):#Movimiento Arriba
         nuevoEstado[raton[0]-1][raton[1]] = 'R'
         raton[0] = raton[0]-1
+        posicionAnterior = raton[:]
         print(contador)
         return contador
     else:
         contador+=1
             
-    if nuevoEstado[raton[0]][raton[1]+1] != "#" and verificarFuncional(raton[0], raton[1]+1, noFuncionales) and ((raton[1]+1) != posicionAnterior[1]):#Movimiento Derecha
+    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales) and ((raton[1]+1) != posicionAnterior[1]):#Movimiento Derecha
         nuevoEstado[raton[0]][raton[1]+1] = 'R'
         raton[1] = raton[1]+1
+        posicionAnterior = raton[:]        
         print(contador)        
         return contador
     else:
         contador+=1
 
-    if nuevoEstado[raton[0]][raton[1]-1] != "#" and verificarFuncional(raton[0], raton[1]-1, noFuncionales) and ((raton[1]-1) != posicionAnterior[1]):#Movimiento Izquierda
+    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales) and ((raton[1]-1) != posicionAnterior[1]):#Movimiento Izquierda
         nuevoEstado[raton[0]][raton[1]-1] = 'R'
         raton[1] = raton[1]-1
+        posicionAnterior = raton[:]        
         print(contador)        
         return contador
     else:
         contador+=1
                     
-    if nuevoEstado[raton[0]+1][raton[1]] != "#" and verificarFuncional(raton[0]+1, raton[1], noFuncionales) and ((raton[0]+1) != posicionAnterior[0]):#Movimiento Abajo
+    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales) and ((raton[0]+1) != posicionAnterior[0]):#Movimiento Abajo
         nuevoEstado[raton[0]+1][raton[1]] = 'R'
         raton[0] = raton[0]+1
+        posicionAnterior = raton[:]         
         print(contador)        
         return contador
     else:
