@@ -8,15 +8,6 @@ def verificarFuncional (ratonFila, ratonColumna, noFuncionales):
                 return False
     return True
 
-# ESTA FUNCION YA NO SIRVE DE NADA <33333
-def agregarNoFuncional (ratonFila, ratonColumna, noFuncionales): #horrible nombre, toca cambiarlo
-    for item in range(len(posicionesVisitadas)):
-        if ratonFila == posicionesVisitadas[item][0]:
-            if ratonColumna == posicionesVisitadas[item][1]:
-                noFuncionales.append([posicionesVisitadas[item][0], posicionesVisitadas[item][1]])
-                print("coordenada agregada")
-                print(noFuncionales)
-
 def encontrarUbicacion(estado, objeto):
     columna = 0
     fila = 0
@@ -33,70 +24,105 @@ def encontrarUbicacion(estado, objeto):
         
 # Función que checa las 4 casillas adyacentes para ver a donde moverse
 def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas):
-
     posicionesVisitadas.append(raton[:])
     contador = 0
+    arriba = 0
+    derecha = 0
+    izquierda = 0
+    abajo = 0
     
     if raton == salida: # Ya se encontró la salida
         return 5
   
-  
     if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales):#Movimiento Arriba
+        # no hay pared ni bloqueado arriba
+        print("no hay pared arriba")
+        arriba = 1
+    else:
+        contador+=1
+
+    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales):#Movimiento Derecha
+        # no hay pared ni bloqueado derecha
+        print("no hay pared derecha")
+        derecha = 1
+    else:
+        contador+=1
+
+    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales):#Movimiento Izquierda
+         print("no hay pared izquierda")
+         izquierda = 1
+    else:
+        contador+=1
+
+    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales):#Movimiento Abajo
+        print("no hay pared abajo")
+        abajo = 1
+    else:
+        contador+=1
+    if contador == 3:
+        noFuncionales.append([raton[0], raton[1]])
+    # HASTA AQUÍ VERIFICADO DE PAREDES, CONTINUA EL MOVIMIENTO
+
+    if arriba == 1:
         if raton[0]-1 != posicionesVisitadas[-2][0]:
+            print("me muevo arr")
             nuevoEstado[raton[0]-1][raton[1]] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]-1
             print("\n")              
             for datos in nuevoEstado:
-                print(datos)    
+                print(datos)   
+            print(contador) 
             return contador
-    else:
-        contador+=1
-            
-    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales):#Movimiento Derecha
+
+    if derecha == 1:
         if raton[1]+1 != posicionesVisitadas[-2][1]: 
+            print("me muevo der")
             nuevoEstado[raton[0]][raton[1]+1] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[1] = raton[1]+1
             print("\n")              
             for datos in nuevoEstado:
                 print(datos)   
+            print(contador)
             return contador
-    else:
-        contador+=1
 
-    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales):#Movimiento Izquierda
+    if izquierda == 1:
         if raton[1]-1 != posicionesVisitadas[-2][1]:
+            print("me muevo izq")
             nuevoEstado[raton[0]][raton[1]-1] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[1] = raton[1]-1 
             print("\n")              
             for datos in nuevoEstado:
                 print(datos)    
+            print(contador)
             return contador
-    else:
-        contador+=1
-                    
-    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales):#Movimiento Abajo
+
+    if abajo == 1:
         if raton[0]+1 != posicionesVisitadas[-2][0]:
+            print("me muevo ab")
             nuevoEstado[raton[0]+1][raton[1]] = 'R'
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]+1 
             print("\n")              
             for datos in nuevoEstado:
                 print(datos)  
+            print(contador)
             return contador
+
     else:
-        contador+=1
-        
-    return contador
+        print("No pude moverme :(")
+        print(contador)
+        return contador
 
 def backtrack(estado, salida, noFuncionales, raton, posicionesVisitadas):
     # estado es el laberinto
     nuevoEstado = estado[:] #crea nuevo estado
             
-    print("Prueba de movimiento:")
+    print("Inicio Backtrack:")
     contador = movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas)
+    print(contador)
 
     if contador == 5: # Ya se encontró la salida
         print("Ya se logro :]")
@@ -104,18 +130,16 @@ def backtrack(estado, salida, noFuncionales, raton, posicionesVisitadas):
 
     if contador == 3: 
         print("Impresion movimiento == 3")
-        print(contador)
         #si la busqueda da 3, se anexa la posicion a no funcionales
-        noFuncionales.append([raton[0], raton[1]]) 
         print("Estamos dentro del 3, imprimo las nofuncionales:")
         print(noFuncionales)
         print("y las visitadas:")
         print(posicionesVisitadas)
+        print("Agrego a noFuncionales")
         backtrack(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas)
         
     elif contador <= 2: 
         print("Impresion movimiento <=2")
-        print(contador)
         #si la busqueda da 2 o menos, se continua la busqueda
         print("Estamos dentro del 2, imprimo las nofuncionales:")
         print(noFuncionales)
