@@ -23,13 +23,12 @@ def encontrarUbicacion(estado, objeto):
         columna = 0
         
 # Función que checa las 4 casillas adyacentes para ver a donde moverse
-def movimiento(raton, nuevoEstado, salida, noFuncionales):
+def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionAnterior):
 
     nuevoEstado[raton[0]][raton[1]] = ' '
-    posicionAnterior = raton[:]
     contador = 0
                     
-    if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales) and ((raton[0]-1) != posicionAnterior[0] and raton[1] != posicionAnterior[1]):#Movimiento Arriba
+    if nuevoEstado[raton[0]-1][raton[1]] != "#" and verificarFuncional(raton[0]-1, raton[1], noFuncionales) and ((raton[0]-1) != posicionAnterior[0]):#Movimiento Arriba
         nuevoEstado[raton[0]-1][raton[1]] = 'R'
         raton[0] = raton[0]-1
         print(contador)
@@ -37,7 +36,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales):
     else:
         contador+=1
             
-    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales) and (raton[0] != posicionAnterior[0] and raton[1]+1 != posicionAnterior[1]):#Movimiento Derecha
+    if nuevoEstado[raton[0]][raton[1]+1] != "#" and verificarFuncional(raton[0], raton[1]+1, noFuncionales) and ((raton[1]+1) != posicionAnterior[1]):#Movimiento Derecha
         nuevoEstado[raton[0]][raton[1]+1] = 'R'
         raton[1] = raton[1]+1
         print(contador)        
@@ -45,7 +44,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales):
     else:
         contador+=1
 
-    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales) and (raton[0] != posicionAnterior[0] and raton[1]-1 != posicionAnterior[1]):#Movimiento Izquierda
+    if nuevoEstado[raton[0]][raton[1]-1] != "#" and verificarFuncional(raton[0], raton[1]-1, noFuncionales) and ((raton[1]-1) != posicionAnterior[1]):#Movimiento Izquierda
         nuevoEstado[raton[0]][raton[1]-1] = 'R'
         raton[1] = raton[1]-1
         print(contador)        
@@ -53,7 +52,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales):
     else:
         contador+=1
                     
-    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales) and (raton[0]+1 != posicionAnterior[0] and raton[1] != posicionAnterior[1]):#Movimiento Abajo
+    if nuevoEstado[raton[0]+1][raton[1]] != "#" and verificarFuncional(raton[0]+1, raton[1], noFuncionales) and ((raton[0]+1) != posicionAnterior[0]):#Movimiento Abajo
         nuevoEstado[raton[0]+1][raton[1]] = 'R'
         raton[0] = raton[0]+1
         print(contador)        
@@ -63,27 +62,25 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales):
 
     if raton == salida:
         return 5
-    else:
-        print(contador)        
-        return contador
 
 def backtrack(estado, salida, noFuncionales, raton):
     #Objetivo es que R y S esten en la misma posición #esto ya queda con la linea 70, procedo a eliminarlo
     # estado es el laberinto
     nuevoEstado = estado[:] #crea nuevo estado
+    posicionAnterior = raton[:]
     # importante: ver si backtrack recibe o inicializa raton
-    if movimiento(raton, nuevoEstado, salida, noFuncionales) <= 2: 
+    if movimiento(raton, nuevoEstado, salida, noFuncionales, posicionAnterior) <= 2: 
         #si la busqueda da 2 o menos, se continua la busqueda
         backtrack(nuevoEstado, salida, noFuncionales, raton)
         print("Impresion final backtrack")
-    if movimiento(raton, nuevoEstado, salida, noFuncionales) >= 3: 
+    if movimiento(raton, nuevoEstado, salida, noFuncionales, posicionAnterior) >= 3: 
         print("Impresion movimiento >=3")
         #si la busqueda da 3, se anexa la posicion a no funcionales
         noFuncionales.append([raton[0], raton[1]]) 
     print("Impresion de nuevo Estado")
     for datos in nuevoEstado:
-        print(nuevoEstado, "\n") #aqui sería imprimir el laberinto con la nueva posicion. no se si funcione, yo lo pegué <3
-    if movimiento(raton, nuevoEstado, salida, noFuncionales) == 5: # Ya se encontró la salida
+        print(nuevoEstado, "\n") 
+    if movimiento(raton, nuevoEstado, salida, noFuncionales, posicionAnterior) == 5: # Ya se encontró la salida
         return True
     return False #si analizaste todas las posibilidades y ninguna funciona, termina
 
