@@ -1,4 +1,5 @@
 import json
+from turtle import pos
 
 # Funcion que verifica si una casilla que no está bloqueada sigue siendo funcional.
 def verificarFuncional (ratonFila, ratonColumna, noFuncionales):
@@ -23,16 +24,17 @@ def encontrarUbicacion(estado, objeto):
         columna = 0 
         
 # Función que checa las 4 casillas adyacentes para ver a donde moverse
-def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas):
+def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, opcion):
     posicionesVisitadas.append(raton[:])
     contador = 0
     arriba = 0
     derecha = 0
     izquierda = 0
     abajo = 0
-    print("\n")              
-    for datos in nuevoEstado:
-        print(datos)       
+    if opcion == 1:
+        print("\n")              
+        for datos in nuevoEstado:
+            print(datos)       
         
     if raton == salida: # Ya se encontró la salida
         return 5
@@ -88,23 +90,20 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas):
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]+1            
             return contador
-    print("No pude moverme :(")
-    print(contador)
     return contador
 
-def backtrack(estado, salida, noFuncionales, raton, posicionesVisitadas):
+def backtrack(estado, salida, noFuncionales, raton, posicionesVisitadas, opcion):
     # estado es el laberinto
     nuevoEstado = estado[:] #crea nuevo estado
             
-    contador = movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas)
+    contador = movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, opcion)
 
     if contador == 5: # Ya se encontró la salida
         print("Salida encontrada correctamente")
         return True
 
     if contador <= 3: 
-        backtrack(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas)
-
+        backtrack(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas, opcion)
     else: 
         print("No hay salida posible")    
         return False #si analizaste todas las posibilidades y ninguna funciona, termina
@@ -116,16 +115,24 @@ def cargarArchivo(rutaArchivo, listaLaberinto):
             listaLaberinto.append(datos.get("fila"))
     return
 
-def eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente):
-    for items in listaLaberintoEficiente:
-        print(items)
-    print(salidaEficiente)
-    print(noFuncionalesEficiente)
-    print(ratonEficiente)
+def eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente, opcion):
+    print(posicionesVisitadasEficiente)
+    backtrack(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente, opcion)
+    posicionesEliminar = []
+    if posicionesVisitadas[0] == salida:
+        posicionesVisitadas.remove(salida)        
+        
+    for i in range(len(posicionesVisitadasEficiente)): 
+        if not i == posicionesVisitadasEficiente.index(posicionesVisitadasEficiente[i]):
+            posicionesEliminar.append(posicionesVisitadasEficiente[i])
+    
+    for i in range(len(posicionesEliminar)):
+        posicionesVisitadasEficiente.remove(posicionesEliminar[i])
+    print("Camino Eficiente")    
     print(posicionesVisitadasEficiente)
     return
 
-def vidas(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas):
+def vidas(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, vida, opcion):
     
     return
 
@@ -159,16 +166,13 @@ noFuncionalesVidas = noFuncionales[:]
 posicionesVisitadasVidas = posicionesVisitadas[:]
 
 opcion = 0
+
 while opcion != 4:
     print("Menu Inicial")
     opcion = int(input("Ingresa \n[1]: Busqueda de salida\n[2]: Busqueda de salida eficiente\n[3]: Laberinto con vidas\n[4]: Salir del Programa\n"))
     if opcion == 1:
-        backtrack(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas)
-        print(salida)
-        print(noFuncionales)
-        print(raton)
-        print(posicionesVisitadas)
+        backtrack(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, opcion) 
     if opcion == 2:
-        eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente)
+        eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente, opcion)
     if opcion == 3:
-        vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas)
+        vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas, opcion)
