@@ -1,5 +1,6 @@
 import json
 from turtle import pos
+import os
 
 # Funcion que verifica si una casilla que no está bloqueada sigue siendo funcional.
 def verificarFuncional (ratonFila, ratonColumna, noFuncionales):
@@ -38,7 +39,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
         print("\n")     
         
     if raton == salida: # Ya se encontró la salida
-        return 5
+        return vida, 5
   
     if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales):#Movimiento Arriba
         arriba = 1
@@ -204,9 +205,12 @@ while opcion != 4:
     opcion = int(input("Ingresa \n[1]: Busqueda de salida\n[2]: Busqueda de salida eficiente\n[3]: Laberinto con vidas\n[4]: Salir del Programa\n"))
     if opcion == 1:
         backtrack(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, 0, opcion) 
+        os.system("pause")
     if opcion == 2:
         eficienteVersionMia(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente, 0, opcion)
+        os.system("pause")
     if opcion == 3:
         print("En esta version, por cada vez que el raton se mueva, perdera un punto de vida")
         vida = int(input("Ingrese la vida que se le desea asignar al raton: "))
         vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas, vida, opcion)
+        os.system("pause")
