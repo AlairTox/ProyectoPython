@@ -302,7 +302,7 @@ def eficiente(listaLaberintoEficiente,salidaEficiente, noFuncionalesEficiente, r
             coordenada = item[:]
             listaLaberintoEficiente[coordenada[0]][coordenada[1]] = '*'
             
-    listaLaberinto[coordenada[0]][coordenada[1]] = 'R'  
+    listaLaberintoEficiente[coordenada[0]][coordenada[1]] = 'R'  
     
     print("Impresion de ruta")  
     for datos in listaLaberintoEficiente:
