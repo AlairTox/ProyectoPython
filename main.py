@@ -86,7 +86,7 @@ def movimientoEfectivo(raton, nuevoEstado, salida, noFuncionales, posicionesVisi
     if contador == 3:
         noFuncionales.append([raton[0], raton[1]])
 
-    # HASTA AQUÍ VERIFICADO DE PAREDES, CONTINUA EL MOVIMIENTO
+    # Hasta aquí verificado de paredes, continua el movimiento
     if arriba == 1:
         if raton[0]-1 != posicionesVisitadas[-2][0]:
             if ok == False:
@@ -269,8 +269,8 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
 
     if contador == 3:
         noFuncionales.append([raton[0], raton[1]])
-    # HASTA AQUÍ VERIFICADO DE PAREDES, CONTINUA EL MOVIMIENTO
-
+    #Hasta aquí verificado de paredes, continua el movimiento
+    
     if arriba == 1:
         if raton[0]-1 != posicionesVisitadas[-2][0]:
             if opcion == 3:
@@ -353,13 +353,16 @@ cargarArchivo(rutaArchivo, listaLaberinto)
 labt = "Laberinto detectado:"
 centradoLabt = labt.center(60)
 print(Back.YELLOW + centradoLabt)
+
 for datos in listaLaberinto:
     print(datos)
+    
 opcion = 0
 print("\n")
 
 
 while opcion != 4:
+    
     texto = "EL RATÓN Y SU QUESO"
     centrado = texto.center(60)
     print(Back.YELLOW + centrado)
@@ -376,6 +379,7 @@ while opcion != 4:
     opcion = int(input())
  
     if opcion == 1:
+        
         system('cls')
         op1 = "Búsqueda de salida"
         centradoOp1 = op1.center(60)
@@ -387,13 +391,16 @@ while opcion != 4:
         salida = encontrarUbicacion(listaLaberinto, 'S')
         posicionesVisitadas = []
         posicionesVisitadas.append(raton)
+        
         encontrarCamino(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, 0, opcion) 
+        
         os.system("pause")
         system('cls')
         listaLaberinto = []
         cargarArchivo(rutaArchivo, listaLaberinto)
    
     if opcion == 2:
+        
         system('cls')
         op2 = "Búsqueda de salida eficiente"
         centradoOp2 = op2.center(60)
@@ -405,11 +412,14 @@ while opcion != 4:
         ratonEficiente = encontrarUbicacion(listaLaberintoEficiente, 'R')
         posicionesVisitadasEficiente = []
         posicionesVisitadasEficiente.append(ratonEficiente)
+        
         eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente)
+        
         os.system("pause")
         system('cls')
     
     if opcion == 3:
+        
         system('cls')
         op3 = "Laberinto con vidas"
         centradoOp3 = op3.center(60)
@@ -423,12 +433,15 @@ while opcion != 4:
         posicionesVisitadasVidas.append(ratonVidas)
         print("En esta versión, por cada vez que el ratón se mueva, perderá un punto de vida")
         vida = int(input("Ingrese la vida que se le desea asignar al ratón: "))
+        
         vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas, vida, opcion)
+        
         listaLaberintoVidas = []
         os.system("pause")
         system('cls')
    
     if opcion == 4:
+        
         system('cls')
         op1 = "¡Hasta luego!"
         centradoOp1 = op1.center(60)
