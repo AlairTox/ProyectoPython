@@ -1,7 +1,11 @@
 import json
-from turtle import pos
 import os
-
+import os.path
+from os import system
+from time import sleep
+from colorama import init
+from colorama import Fore, Back
+init(autoreset=True)
 def verificarVisitadaEfectiva (ratonFila, ratonColumna, ruta, paso):
     for key, value in ruta.items():
         if ratonFila == key[0]:
@@ -43,6 +47,7 @@ def obtenerRutaCorta(ruta, coordenada, rutaCorta, paso):
 def movimientoEfectivo(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, ruta, pasos):
 
     posicionesVisitadas.append(raton[:])
+    pared = simboloPared(nuevoEstado)
     contador = 0
     arriba = 0
     derecha = 0
@@ -56,22 +61,22 @@ def movimientoEfectivo(raton, nuevoEstado, salida, noFuncionales, posicionesVisi
         pasos+=1
         return pasos, 5
   
-    if nuevoEstado[raton[0]-1][raton[1]] != '#' and verificarFuncional(raton[0]-1, raton[1], noFuncionales):#Movimiento Arriba
+    if nuevoEstado[raton[0]-1][raton[1]] != pared and verificarFuncional(raton[0]-1, raton[1], noFuncionales):#Movimiento Arriba
         arriba = 1
     else:
         contador+=1
 
-    if nuevoEstado[raton[0]][raton[1]+1] != '#' and verificarFuncional(raton[0], raton[1]+1, noFuncionales):#Movimiento Derecha
+    if nuevoEstado[raton[0]][raton[1]+1] != pared and verificarFuncional(raton[0], raton[1]+1, noFuncionales):#Movimiento Derecha
         derecha = 1
     else:
         contador+=1
 
-    if nuevoEstado[raton[0]][raton[1]-1] != '#' and verificarFuncional(raton[0], raton[1]-1, noFuncionales):#Movimiento Izquierda
+    if nuevoEstado[raton[0]][raton[1]-1] != pared and verificarFuncional(raton[0], raton[1]-1, noFuncionales):#Movimiento Izquierda
          izquierda = 1
     else:
         contador+=1
 
-    if nuevoEstado[raton[0]+1][raton[1]] != '#' and verificarFuncional(raton[0]+1, raton[1], noFuncionales):#Movimiento Abajo
+    if nuevoEstado[raton[0]+1][raton[1]] != pared and verificarFuncional(raton[0]+1, raton[1], noFuncionales):#Movimiento Abajo
         abajo = 1
     else:
         contador+=1
@@ -136,23 +141,25 @@ def encontrarCaminoEficiente(listaLaberintoEficiente, salidaEficiente, noFuncion
     pasos, contador = movimientoEfectivo(ratonEficiente, nuevoEstado, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ruta, pasos)
 
     if contador == 5: 
-        print("Salida encontrada correctamente")
+        print(f"{Back.GREEN}¡Salida encontrada correctamente!")
         return pasos
 
     if contador <= 3: 
         pasos = encontrarCaminoEficiente(nuevoEstado, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ratonEficiente, ruta, pasos)
     else: 
-        print("No hay salida posible")    
-        return pasos
+        print(f"{Back.RED}No hay salida posible")    
+        return 1987
 
     return pasos
 
 def rutaEficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ratonEficiente, ruta, pasos, rutaCorta):
     print("\n")
     pasos = encontrarCaminoEficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ratonEficiente, ruta, pasos)
+    if pasos == 1987:
+        return False
     coordenada = tuple(salidaEficiente[:])
     obtenerRutaCorta(ruta, coordenada, rutaCorta, pasos) 
-    print("La ruta corta es:")
+    print(f"{Fore.YELLOW}La ruta corta es:")
     print(rutaCorta)
     return
 
@@ -193,8 +200,10 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
     if opcion != 2:
         # print("\n")              
         for datos in nuevoEstado:
-            print(datos)    
+            print(datos)   
         print("\n")     
+        sleep(.5)
+        system('cls')  
         
     if raton == salida: # Ya se encontró la salida
         return vida, 5
@@ -227,7 +236,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
         if raton[0]-1 != posicionesVisitadas[-2][0]:
             if opcion == 3:
                 vida-=1
-            nuevoEstado[raton[0]-1][raton[1]] = 'R'
+            nuevoEstado[raton[0]-1][raton[1]] = chr(9608)
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]-1
             return vida, contador
@@ -236,7 +245,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
         if raton[1]+1 != posicionesVisitadas[-2][1]:
             if opcion == 3:
                 vida-=1 
-            nuevoEstado[raton[0]][raton[1]+1] = 'R'
+            nuevoEstado[raton[0]][raton[1]+1] = chr(9608)
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[1] = raton[1]+1            
             return vida, contador
@@ -245,7 +254,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
         if raton[1]-1 != posicionesVisitadas[-2][1]:
             if opcion == 3:
                 vida-=1
-            nuevoEstado[raton[0]][raton[1]-1] = 'R'
+            nuevoEstado[raton[0]][raton[1]-1] = chr(9608)
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[1] = raton[1]-1            
             return vida, contador
@@ -254,7 +263,7 @@ def movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, v
         if raton[0]+1 != posicionesVisitadas[-2][0]:
             if opcion == 3:
                 vida-=1
-            nuevoEstado[raton[0]+1][raton[1]] = 'R'
+            nuevoEstado[raton[0]+1][raton[1]] = chr(9608)
             nuevoEstado[raton[0]][raton[1]] = ' '
             raton[0] = raton[0]+1            
             return vida, contador
@@ -267,71 +276,107 @@ def encontrarCamino(estado, salida, noFuncionales, raton, posicionesVisitadas, v
             
     vida, contador = movimiento(raton, nuevoEstado, salida, noFuncionales, posicionesVisitadas, vida, opcion)
     if opcion == 3:
-        print("Vida restante: " + str(vida))
+        print("Vida restante: " + Fore.CYAN +str(vida))
         if vida == 0:
-            print("Se ha terminado la vida del raton.")
+            errmsg="¡UPS!"
+            centradoerrmsg=errmsg.center(60)
+            print(Back.RED + centradoerrmsg)
+            print(Fore.RED + "Se le ha terminado la vida al ratón :(")
             return vida, False
 
     if contador == 5: # Ya se encontró la salida
-        print("Salida encontrada correctamente")
+        winmsg="¡BIEN!"
+        centradowinmsg=winmsg.center(60)
+        print(Back.GREEN + centradowinmsg)
+        print(Fore.GREEN + "Salida encontrada correctamente")
         return vida, True
 
     if contador <= 3: 
         encontrarCamino(nuevoEstado, salida, noFuncionales, raton, posicionesVisitadas, vida, opcion)
     else: 
-        print("No hay salida posible")    
+        errmsg2="No hay salida posible :("
+        centradoerrmsg2=errmsg2.center(60)
+        print(Back.RED + centradoerrmsg2)  
         return vida, False #si analizaste todas las posibilidades y ninguna funciona, termina
 
 def cargarArchivo(rutaArchivo, listaLaberinto):
-    with open(rutaArchivo) as archivo:
-        contenido = json.load(archivo)
-        for datos in contenido:
-            listaLaberinto.append(datos.get("fila"))
+    file_exists = os.path.exists(rutaArchivo)
+    if file_exists == True:
+        with open(rutaArchivo) as archivo:
+            contenido = json.load(archivo)
+            for datos in contenido:
+                listaLaberinto.append(datos.get("fila"))
+    else:
+        print("El json no se ha encontrado.")
+        os.system("pause")
+        exit()
+
     return
 
 def eficiente(listaLaberintoEficiente,salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente):
     rutaCorta = []
     pasos = 0
     ruta = {}
-    rutaEficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ratonEficiente, ruta, pasos, rutaCorta)
-    
+    completado = rutaEficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, posicionesVisitadasEficiente, ratonEficiente, ruta, pasos, rutaCorta)
+    if completado== False:
+        return
     coordenada = rutaCorta[0]
 
     for item in rutaCorta:
         if listaLaberintoEficiente[coordenada[0]][coordenada[1]] != 'S':
             coordenada = item[:]
-            listaLaberintoEficiente[coordenada[0]][coordenada[1]] = '*'
+            listaLaberintoEficiente[coordenada[0]][coordenada[1]] = chr(215)
             
     listaLaberintoEficiente[coordenada[0]][coordenada[1]] = 'R'  
     
-    print("Impresion de ruta")  
+    print(f"{Fore.YELLOW}Impresión de ruta")  
     for datos in listaLaberintoEficiente:
         print(datos)
 
 def vidas(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, vida, opcion):
     vida = encontrarCamino(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, vida, opcion)
     return vida
-    
 
 
 ########## MAIN #############################
+
+
 listaLaberinto = []
 rutaArchivo = 'laberinto.json'
 
 cargarArchivo(rutaArchivo, listaLaberinto)
-
-print("Impresión inicial del laberinto")
+labt="Laberinto detectado:"
+centradoLabt=labt.center(60)
+print(Back.YELLOW + centradoLabt)
 for datos in listaLaberinto:
     print(datos)
-
-
 opcion = 0
+print("\n")
+
 
 while opcion != 4:
-    print("Menu Inicial")
+    texto= "EL RATÓN Y SU QUESO"
+    centrado=texto.center(60)
+    print(Back.YELLOW + centrado)
+    titulo= "Menú principal"
+    centradoTitulo=titulo.center(60)
+    print(Fore.YELLOW + centradoTitulo)
+    print("Ingrese: ")
     
-    opcion = int(input("Ingresa \n[1]: Busqueda de salida\n[2]: Busqueda de salida eficiente\n[3]: Laberinto con vidas\n[4]: Salir del Programa\n"))
+    print(f"{Fore.RED}[1] {Fore.RESET} Búsqueda de salida")
+    print(f"{Fore.YELLOW}[2] {Fore.RESET} Búsqueda de salida eficiente")
+    print(f"{Fore.CYAN}[3] {Fore.RESET} Laberinto con vidas")
+    print(f"{Fore.GREEN}[4] {Fore.RESET} Salir del programa")
+   
+    opcion = int(input())
+ 
     if opcion == 1:
+        system('cls')
+        op1="Búsqueda de salida"
+        centradoOp1=op1.center(60)
+        print(Back.RED + centradoOp1)
+        print(f"{Fore.RED} El ratón intentará salir del laberinto")
+        sleep(2)
         noFuncionales =[]
         raton = encontrarUbicacion(listaLaberinto, 'R')
         salida = encontrarUbicacion(listaLaberinto, 'S')
@@ -339,9 +384,15 @@ while opcion != 4:
         posicionesVisitadas.append(raton)
         encontrarCamino(listaLaberinto, salida, noFuncionales, raton, posicionesVisitadas, 0, opcion) 
         os.system("pause")
+        system('cls')
         listaLaberinto = []
         cargarArchivo(rutaArchivo, listaLaberinto)
+   
     if opcion == 2:
+        system('cls')
+        op2="Búsqueda de salida eficiente"
+        centradoOp2=op2.center(60)
+        print(Back.YELLOW + centradoOp2)
         listaLaberintoEficiente = []
         cargarArchivo(rutaArchivo, listaLaberintoEficiente)
         salidaEficiente = encontrarUbicacion(listaLaberintoEficiente, 'S')
@@ -351,7 +402,13 @@ while opcion != 4:
         posicionesVisitadasEficiente.append(ratonEficiente)
         eficiente(listaLaberintoEficiente, salidaEficiente, noFuncionalesEficiente, ratonEficiente, posicionesVisitadasEficiente)
         os.system("pause")
+        system('cls')
+    
     if opcion == 3:
+        system('cls')
+        op3="Laberinto con vidas"
+        centradoOp3=op3.center(60)
+        print(Back.CYAN + centradoOp3)
         listaLaberintoVidas = []
         cargarArchivo(rutaArchivo, listaLaberintoVidas)
         salidaVidas = encontrarUbicacion(listaLaberintoVidas, 'S')
@@ -359,8 +416,24 @@ while opcion != 4:
         noFuncionalesVidas = []
         posicionesVisitadasVidas = []
         posicionesVisitadasVidas.append(ratonVidas)
-        print("En esta version, por cada vez que el raton se mueva, perdera un punto de vida")
-        vida = int(input("Ingrese la vida que se le desea asignar al raton: "))
+        print("En esta versión, por cada vez que el ratón se mueva, perderá un punto de vida")
+        vida = int(input("Ingrese la vida que se le desea asignar al ratón: "))
         vidas(listaLaberintoVidas, salidaVidas, noFuncionalesVidas, ratonVidas, posicionesVisitadasVidas, vida, opcion)
         listaLaberintoVidas = []
         os.system("pause")
+        system('cls')
+   
+    if opcion==4:
+        system('cls')
+        op1="¡Hasta luego!"
+        centradoOp1=op1.center(60)
+        print(Back.GREEN + centradoOp1)
+        print("\n")
+        creditos="CRÉDITOS"
+        centradoCreditos=creditos.center(60)
+        print(Back.YELLOW + centradoCreditos)
+        print(f"{Fore.RED}Escamilla Suárez Magally")
+        print(f"{Fore.GREEN}Luna Alberto Darwin Leonel")
+        print(f"{Fore.CYAN}Toxtega Muñoz Alair")
+
+        sleep(1)
